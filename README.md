@@ -9,5 +9,5 @@ Kindly reach out to us, in case you find a mistake or irregularity in the data o
 Please reference this work or the use of the merged consumption tables as: 
 Ipsen, L., & Schulz, J. (2024). The (Dis-)equalizing Effects of Production Networks (Berg Working Paper No. 195)
 
-Link to Eurostat Data on Consumption by Purpose: https://ec.europa.eu/eurostat/databrowser/view/hbs_str_t223/default/table?lang=en&category=livcon.hbs.hbs_struc
-Link to Input Output Data: https://www.rug.nl/ggdc/valuechain/wiod/?lang=en
+- Link to Eurostat Data on Consumption by Purpose: https://ec.europa.eu/eurostat/databrowser/view/hbs_str_t223/default/table?lang=en&category=livcon.hbs.hbs_struc
+- Link to Input Output Data: https://www.rug.nl/ggdc/valuechain/wiod/?lang=en
