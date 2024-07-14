@@ -1,0 +1,1285 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     50583,       1277]
+NotebookOptionsPosition[     48144,       1241]
+NotebookOutlinePosition[     48514,       1257]
+CellTagsIndexPosition[     48471,       1254]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "Import", " ", "list", " ", "of", " ", "Gross", " ", "Outputs", " ", "for",
+     " ", "all", " ", "Sectors"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"go2014", "=", 
+     RowBox[{
+      RowBox[{"Import", "[", "\"\<GO_2014.xlsx\>\"", "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Import", " ", "WIOD", " ", "IO", " ", "table", " ", "for", " ", "2014", 
+     " ", 
+     RowBox[{"w", "/", "o"}], " ", 
+     RowBox[{"labels", ".", " ", "Transpose"}], " ", "to", " ", "enable", " ",
+      "easier", " ", "division", " ", "by", " ", "columns"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"io2014", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{
+       RowBox[{"Import", "[", "\"\<IO_2014.xlsx\>\"", "]"}], "[", 
+       RowBox[{"[", "1", "]"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Calculate", " ", "technological", " ", "coefficients", " ", "by", " ", 
+     "dividing", " ", "each", " ", "row", " ", 
+     RowBox[{"(", 
+      RowBox[{"column", " ", "of", " ", "original", " ", "IO", " ", "table"}],
+       ")"}], " ", "by", " ", "corresponding", " ", "GO", " ", 
+     RowBox[{"value", ".", " ", "Transpose"}], " ", 
+     RowBox[{"back", "."}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"techcoeff", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"Quiet", "[", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"io2014", "[", 
+             RowBox[{"[", "k", "]"}], "]"}], "/", 
+            RowBox[{"go2014", "[", 
+             RowBox[{"[", "k", "]"}], "]"}]}], "/.", " ", 
+           RowBox[{"Indeterminate", ":>", "0"}]}], "/.", " ", 
+          RowBox[{"ComplexInfinity", ":>", "0"}]}], ",", 
+         RowBox[{"{", 
+          RowBox[{"k", ",", "1", ",", 
+           RowBox[{"Length", "[", "io2014", "]"}]}], "}"}]}], "]"}], "]"}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Calculate", " ", "A"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"leontiefinverse", "=", 
+     RowBox[{"Inverse", "[", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"IdentityMatrix", "[", 
+         RowBox[{"Length", "[", "techcoeff", "]"}], "]"}], "-", "techcoeff"}],
+        ")"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"Clear", "[", 
+    RowBox[{"aee", ",", "axe"}], "]"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Define", " ", 
+     RowBox[{"(", "transposed", ")"}], " ", "A", " ", "matrix", " ", "with", 
+     " ", "row", " ", "and", " ", "column", " ", "for", " ", "exogenous", " ",
+      "sector", " ", "dropped"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"aee", "[", "k_", "]"}], ":=", 
+    RowBox[{"Transpose", "[", 
+     RowBox[{"Drop", "[", 
+      RowBox[{"leontiefinverse", ",", 
+       RowBox[{"{", "k", "}"}], ",", 
+       RowBox[{"{", "k", "}"}]}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Take", " ", "row", " ", "of", " ", "exogenous", " ", "sector"}],
+      ",", " ", 
+     RowBox[{
+     "drop", " ", "own", " ", "entry", " ", "and", " ", "transpose"}]}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"axe", "[", "k_", "]"}], ":=", 
+    RowBox[{"Drop", "[", 
+     RowBox[{
+      RowBox[{"techcoeff", "[", 
+       RowBox[{"[", "k", "]"}], "]"}], ",", 
+      RowBox[{"{", "k", "}"}]}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Import", " ", "price", " ", "time", " ", "series", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"intermediate", " ", "goods", " ", "price", " ", "levels"}], 
+       ",", " ", 
+       RowBox[{"II_PI", " ", "in", " ", "WIOD", " ", "SEA"}]}], ")"}]}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"prices", "=", 
+     RowBox[{
+      RowBox[{"Import", "[", "\"\<iiprices_full.xlsx\>\"", "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Define", " ", "price", " ", "shocks", " ", "as", " ", "mean", " ", "of", 
+     " ", "log", " ", "differences", " ", "over", " ", "all", " ", "years"}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"priceshocks", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Mean", "[", 
+        RowBox[{"Differences", "[", 
+         RowBox[{"Log", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Drop", "[", 
+             RowBox[{"prices", ",", "1"}], "]"}], "[", 
+            RowBox[{"[", 
+             RowBox[{"All", ",", 
+              RowBox[{"5", ";;", 
+               RowBox[{"-", "1"}]}]}], "]"}], "]"}], "[", 
+           RowBox[{"[", "k", "]"}], "]"}], "]"}], "]"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"k", ",", "1", ",", 
+         RowBox[{
+          RowBox[{"Length", "[", "prices", "]"}], "-", "1"}]}], "}"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Load", " ", "demand", " ", "shares", " ", "according", " ", "to", " ", 
+     "quantile"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"quantiledemand", "[", "q_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"quantiledemand", "[", "q", "]"}], "=", 
+     RowBox[{
+      RowBox[{"Import", "[", 
+       RowBox[{"\"\<Q\>\"", "<>", 
+        RowBox[{"ToString", "[", "q", "]"}], "<>", 
+        "\"\< demand shares.xlsx\>\""}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"countrypos", "[", "o_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"Position", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"quantiledemand", "[", "1", "]"}], "[", 
+        RowBox[{"[", "2", "]"}], "]"}], ",", "o"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"1", ",", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"quantiledemandcountry", "[", 
+     RowBox[{"q_", ",", "o_"}], "]"}], ":=", 
+    RowBox[{"Flatten", "[", 
+     RowBox[{"Append", "[", 
+      RowBox[{
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Transpose", "[", 
+           RowBox[{"quantiledemand", "[", "q", "]"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"countrypos", "[", "o", "]"}], "]"}], "]"}], ",", "2"}], 
+        "]"}], ",", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "56"}], "]"}]}], "]"}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Calculate", " ", "indirect", " ", "effect"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"indirect", "[", 
+     RowBox[{"k_", ",", "q_", ",", "c_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"indirect", "[", 
+      RowBox[{"k", ",", "q", ",", "c"}], "]"}], "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"aee", "[", "k", "]"}], ".", 
+       RowBox[{"axe", "[", "k", "]"}], ".", 
+       RowBox[{"Drop", "[", 
+        RowBox[{
+         RowBox[{"quantiledemandcountry", "[", 
+          RowBox[{"q", ",", "c"}], "]"}], ",", 
+         RowBox[{"{", "k", "}"}]}], "]"}]}], "*", 
+      RowBox[{"priceshocks", "[", 
+       RowBox[{"[", "k", "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Calculate", " ", "direct", " ", "effect"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"direct", "[", 
+     RowBox[{"k_", ",", "q_", ",", "c_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"direct", "[", 
+      RowBox[{"k", ",", "q", ",", "c"}], "]"}], "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"quantiledemandcountry", "[", 
+        RowBox[{"q", ",", "c"}], "]"}], "[", 
+       RowBox[{"[", "k", "]"}], "]"}], "*", 
+      RowBox[{"priceshocks", "[", 
+       RowBox[{"[", "k", "]"}], "]"}]}]}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Load", " ", "income", " ", "data"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"incdata", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{"\"\<income_quantiles.csv\>\"", ",", "\"\<CSV\>\""}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.912158631731659*^9, 3.9121587176486483`*^9}, 
+   3.9121606096833754`*^9, {3.912331108384073*^9, 3.9123311486276865`*^9}, 
+   3.9123314406120005`*^9, {3.9123319755516195`*^9, 3.912331979997903*^9}, {
+   3.9125926616846533`*^9, 3.9125928652882576`*^9}, {3.912592936316186*^9, 
+   3.9125930629335155`*^9}, {3.9125952096343575`*^9, 
+   3.9125952136028204`*^9}, {3.9125957090917463`*^9, 
+   3.9125957145344934`*^9}, {3.9125958442092705`*^9, 3.912595879031616*^9}, {
+   3.9125960537034*^9, 3.912596061396823*^9}, 3.9125964490498943`*^9, {
+   3.9156142376782517`*^9, 3.9156142379676714`*^9}, {3.9180414419394503`*^9, 
+   3.9180414428641667`*^9}, {3.918044241728256*^9, 3.9180442445731115`*^9}, {
+   3.929635899434131*^9, 3.9296358997778044`*^9}, {3.929945075732566*^9, 
+   3.929945122190703*^9}, {3.929947431012139*^9, 3.9299474337780533`*^9}, {
+   3.9299644718402495`*^9, 3.9299644747936563`*^9}, {3.9299655713619127`*^9, 
+   3.929965600677473*^9}, {3.9299657713204613`*^9, 
+   3.9299657790243306`*^9}},ExpressionUUID->"63171fc0-b810-44ee-8b1e-\
+ff8cc91794ac"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Define", " ", "selection", " ", "function", " ", "for", " ", "income", 
+    " ", "wrt", " ", "country", " ", "and", " ", "quantile"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Clear", "[", "selectinc", "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"countryposinc", "[", "c_", "]"}], ":=", 
+    RowBox[{"Flatten", "[", 
+     RowBox[{"Position", "[", 
+      RowBox[{
+       RowBox[{"incdata", "[", 
+        RowBox[{"[", 
+         RowBox[{"All", ",", "1"}], "]"}], "]"}], ",", "c"}], "]"}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"countries", "=", 
+     RowBox[{"DeleteDuplicates", "[", 
+      RowBox[{
+       RowBox[{"Drop", "[", 
+        RowBox[{"prices", ",", "1"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"selectinc", "[", 
+     RowBox[{"c_", ",", "q_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"incdata", "[", 
+       RowBox[{"[", 
+        RowBox[{"countryposinc", "[", "c", "]"}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"q", "+", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Define", " ", "function", " ", "to", " ", "find", " ", "sector", " ", 
+     "position"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Clear", "[", "findsectorpos", "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"findsectorpos", "[", 
+     RowBox[{"c_", ",", "s_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"findsectorpos", "[", 
+      RowBox[{"c", ",", "s"}], "]"}], "=", 
+     RowBox[{
+      RowBox[{"Flatten", "[", 
+       RowBox[{"Position", "[", 
+        RowBox[{
+         RowBox[{"Transpose", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Drop", "[", 
+              RowBox[{"prices", ",", "1"}], "]"}], "[", 
+             RowBox[{"[", 
+              RowBox[{"All", ",", "1"}], "]"}], "]"}], ",", 
+            RowBox[{
+             RowBox[{"Drop", "[", 
+              RowBox[{"prices", ",", "1"}], "]"}], "[", 
+             RowBox[{"[", 
+              RowBox[{"All", ",", "4"}], "]"}], "]"}]}], "}"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"c", ",", "s"}], "}"}]}], "]"}], "]"}], "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "Define", " ", "function", " ", "for", " ", "total", " ", "effect", " ", 
+      "of", " ", "a", " ", "specific", " ", "sector", " ", "as", " ", "a", 
+      " ", "function", " ", "of", " ", "demand", " ", "quantile"}], ",", " ", 
+     RowBox[{"demand", " ", "country"}], ",", " ", 
+     RowBox[{
+     "destination", " ", "country", " ", "and", " ", "destination", " ", 
+      "sector"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Clear", "[", "totalpersector", "]"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"totalpersector", "[", 
+     RowBox[{"o_", ",", "c_", ",", "s_", ",", "q_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"direct", "[", 
+      RowBox[{
+       RowBox[{"findsectorpos", "[", 
+        RowBox[{"c", ",", "s"}], "]"}], ",", "q", ",", "o"}], "]"}], "+", 
+     RowBox[{"indirect", "[", 
+      RowBox[{
+       RowBox[{"findsectorpos", "[", 
+        RowBox[{"c", ",", "s"}], "]"}], ",", "q", ",", "o"}], "]"}]}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Calculate", " ", "total", " ", "effect", " ", "for", " ", "a", " ", 
+     "specific", " ", "sector", " ", "for", " ", "a", " ", "given", " ", 
+     "demand", " ", "country", " ", "and", " ", "demand", " ", "quantile", 
+     " ", "over", " ", "all", " ", "destination", " ", "countries"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"totalallcountries", "[", 
+     RowBox[{"o_", ",", "s_", ",", "q_"}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"totalallcountries", "[", 
+      RowBox[{"o", ",", "s", ",", "q"}], "]"}], "=", 
+     RowBox[{"Total", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"direct", "[", 
+          RowBox[{
+           RowBox[{"findsectorpos", "[", 
+            RowBox[{
+             RowBox[{"countries", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], ",", "s"}], "]"}], ",", "q", 
+           ",", "o"}], "]"}], "+", 
+         RowBox[{"indirect", "[", 
+          RowBox[{
+           RowBox[{"findsectorpos", "[", 
+            RowBox[{
+             RowBox[{"countries", "[", 
+              RowBox[{"[", "i", "]"}], "]"}], ",", "s"}], "]"}], ",", "q", 
+           ",", "o"}], "]"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "countries", "]"}]}], "}"}]}], "]"}], 
+      "]"}]}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Define", " ", "demand", " ", "countries", " ", "as", " ", "all", " ", 
+     "countries", " ", "for", " ", "which", " ", "we", " ", "have", " ", 
+     "demand", " ", "shares", " ", "in", " ", "list"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"demandcountries", "=", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<AUT\>\"", ",", " ", "\"\<BEL\>\"", " ", ",", "\"\<BGR\>\"", ",", 
+       " ", "\"\<CYP\>\"", ",", " ", "\"\<DEU\>\"", ",", " ", "\"\<DNK\>\"", 
+       ",", " ", "\"\<ESP\>\"", ",", " ", "\"\<EST\>\"", ",", " ", 
+       "\"\<FRA\>\"", ",", " ", "\"\<GRC\>\"", ",", " ", "\"\<HRV\>\"", ",", 
+       " ", "\"\<HUN\>\"", ",", " ", "\"\<LTU\>\"", ",", " ", "\"\<LUX\>\"", 
+       ",", " ", "\"\<LVA\>\"", ",", " ", "\"\<MLT\>\"", ",", "\"\<NLD\>\"", 
+       ",", "\"\<POL\>\"", ",", " ", "\"\<ROU\>\"", ",", " ", "\"\<SVK\>\"", 
+       ",", "\"\<SVN\>\""}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Find", " ", "list", " ", "of", " ", "sectors"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"sectors", "=", 
+     RowBox[{"DeleteDuplicates", "[", 
+      RowBox[{"Drop", "[", 
+       RowBox[{
+        RowBox[{"prices", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "4"}], "]"}], "]"}], ",", "1"}], "]"}], "]"}]}],
+     ";"}], "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Estimate", " ", "log"}], "-", 
+     RowBox[{
+     "log", " ", "regression", " ", "with", " ", "country", " ", "FE", " ", 
+      "with", " ", "income", " ", "as", " ", "independent", " ", "and", " ", 
+      "total", " ", "effect", " ", "as", " ", "dependent", " ", 
+      "variable"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"estimateslog", "[", "sector_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"LinearModelFit", "[", 
+       RowBox[{
+        RowBox[{"Partition", "[", 
+         RowBox[{
+          RowBox[{"Flatten", "[", 
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"demandcountries", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"selectinc", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "q"}], "]"}], "]"}], 
+                 ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"totalallcountries", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}],
+                    "]"}], "]"}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], 
+            "]"}], "]"}], ",", "3"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"NominalVariables", "\[Rule]", "a"}]}], "]"}], "[", 
+      "\"\<ParameterTableEntries\>\"", "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"-", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{
+  3.912596579497203*^9, {3.912596857903073*^9, 3.9125968656647167`*^9}, {
+   3.9126135884248886`*^9, 3.9126135958024106`*^9}, 3.915614230791961*^9, 
+   3.9296359094786606`*^9, 3.929636136353735*^9, 3.9299451640856204`*^9},
+ CellLabel->"In[50]:=",ExpressionUUID->"c5d2d9cf-2e64-4c33-bd5c-2a26cc12b125"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Define", " ", "list", " ", "of", " ", "estimates", " ", "for", " ", 
+     "log"}], "-", 
+    RowBox[{
+    "log", " ", "regressions", " ", "and", " ", "order", " ", "from", " ", 
+     "small", " ", "to", " ", "large", " ", "estimate"}]}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"logestimatelist", "=", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"Quiet", "[", 
+        RowBox[{"Cases", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"estimateslog", "[", 
+                RowBox[{"sectors", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"1.96", "*", 
+               RowBox[{
+                RowBox[{"estimateslog", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", 
+              RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"_", "?", "NumericQ"}], ",", 
+            RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+       "First"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Define", " ", "their", " ", "labels"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"logestimatelistlabels", "=", 
+     RowBox[{
+      RowBox[{"SortBy", "[", 
+       RowBox[{
+        RowBox[{"Quiet", "[", 
+         RowBox[{"Cases", "[", 
+          RowBox[{
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"sectors", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], ",", 
+               RowBox[{"1.96", "*", 
+                RowBox[{
+                 RowBox[{"estimateslog", "[", 
+                  RowBox[{"sectors", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"estimateslog", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"_", ",", 
+             RowBox[{"_", "?", "NumericQ"}], ",", 
+             RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+        "Last"}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "1"}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Define", " ", "rotation", " ", "function", " ", "for", " ", "ticks", " ",
+      "in", " ", "plot"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"tick", "[", "s_String", "]"}], ":=", 
+     RowBox[{"Rotate", "[", 
+      RowBox[{"s", ",", 
+       RowBox[{"90", " ", "Degree"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellLabel->"In[62]:=",ExpressionUUID->"5c812635-3dd3-48bf-8b88-f744011f8f53"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9121605999776745`*^9, 
+  3.9121606062832174`*^9}},ExpressionUUID->"afefd359-ce36-4ebc-b48f-\
+d64c41bb71fb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Plot", " ", "elasticity", " ", "estimates", " ", "for", " ", "total", " ",
+     "effect"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"ListPlot", "[", 
+   RowBox[{
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"Around", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"logestimatelist", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "1"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"logestimatelist", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "2"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "logestimatelist", "]"}]}], "}"}]}], "]"}], 
+    ",", 
+    RowBox[{"Frame", "->", "True"}], ",", 
+    RowBox[{"FrameTicks", "->", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"tick", "@", 
+              RowBox[{"logestimatelistlabels", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", 
+             RowBox[{"Length", "[", "logestimatelistlabels", "]"}]}], "}"}]}],
+           "]"}], ",", "None"}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"ImageSize", "->", "500"}], ",", 
+    RowBox[{"PlotStyle", "->", "Black"}], ",", 
+    RowBox[{
+    "PlotLabel", "->", "\"\<Coefficients for the Total Effect\>\""}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.9123327567245264`*^9, 3.912332764910468*^9}, {
+   3.912593068008255*^9, 3.912593094493331*^9}, 3.9296359141338177`*^9},
+ CellLabel->"In[65]:=",ExpressionUUID->"13d0233e-75fd-41ad-9100-748bddb19ebf"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.929636229887821*^9, 3.929636229903472*^9}},
+ CellLabel->"In[66]:=",ExpressionUUID->"cca155ae-db00-409f-a3fd-4118a324235b"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{
+  "Define", " ", "only", " ", "direct", " ", "effect", " ", "for", " ", "one",
+    " ", "sector", " ", "in", " ", "all", " ", "possible", " ", "destination",
+    " ", "countries"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.9122447142233057`*^9, 3.9122447210643563`*^9}, {
+  3.9125931952478595`*^9, 3.912593215988001*^9}},
+ CellLabel->"In[67]:=",ExpressionUUID->"c614857f-a36f-4750-ac3d-0f5a9aabd0ef"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"totaldirectallcountries", "[", 
+    RowBox[{"o_", ",", "s_", ",", "q_"}], "]"}], ":=", 
+   RowBox[{"Total", "[", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"direct", "[", 
+       RowBox[{
+        RowBox[{"findsectorpos", "[", 
+         RowBox[{
+          RowBox[{"countries", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", "s"}], "]"}], ",", "q", ",", 
+        "o"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "countries", "]"}]}], "}"}]}], "]"}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "Define", " ", "only", " ", "indirect", " ", "effect", " ", "for", " ", 
+    "one", " ", "sector", " ", "in", " ", "all", " ", "possible", " ", 
+    "destination", " ", "countries"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"totalindirectallcountries", "[", 
+   RowBox[{"o_", ",", "s_", ",", "q_"}], "]"}], ":=", 
+  RowBox[{"Total", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"indirect", "[", 
+      RowBox[{
+       RowBox[{"findsectorpos", "[", 
+        RowBox[{
+         RowBox[{"countries", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], ",", "s"}], "]"}], ",", "q", ",", 
+       "o"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", 
+       RowBox[{"Length", "[", "countries", "]"}]}], "}"}]}], "]"}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.912593220618095*^9, 3.91259322362131*^9}},
+ CellLabel->"In[68]:=",ExpressionUUID->"edfeb51c-a625-4b1e-b6cf-d3795da282cd"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Log", "-", 
+     RowBox[{
+     "log", " ", "estimates", " ", "of", " ", "elasticity", " ", "of", " ", 
+      "direct", " ", "effect", " ", "with", " ", "respect", " ", "to", " ", 
+      "income"}]}], ",", " ", 
+    RowBox[{"including", " ", "country", " ", 
+     RowBox[{"FE", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"estimateslogdirect", "[", "sector_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"LinearModelFit", "[", 
+       RowBox[{
+        RowBox[{"Partition", "[", 
+         RowBox[{
+          RowBox[{"Flatten", "[", 
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"demandcountries", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"selectinc", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "q"}], "]"}], "]"}], 
+                 ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"totaldirectallcountries", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}],
+                    "]"}], "]"}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], 
+            "]"}], "]"}], ",", "3"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"NominalVariables", "\[Rule]", "a"}]}], "]"}], "[", 
+      "\"\<ParameterTableEntries\>\"", "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"-", "1"}], "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Log", "-", 
+      RowBox[{
+      "log", " ", "estimates", " ", "of", " ", "elasticity", " ", "of", " ", 
+       "indirect", " ", "effect", " ", "with", " ", "respect", " ", "to", " ",
+        "income"}]}], ",", " ", 
+     RowBox[{"including", " ", "country", " ", 
+      RowBox[{"FE", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"estimateslogindirect", "[", "sector_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"LinearModelFit", "[", 
+       RowBox[{
+        RowBox[{"Partition", "[", 
+         RowBox[{
+          RowBox[{"Flatten", "[", 
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"demandcountries", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"selectinc", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "q"}], "]"}], "]"}], 
+                 ",", 
+                 RowBox[{"Log", "[", 
+                  RowBox[{"totalindirectallcountries", "[", 
+                   RowBox[{
+                    RowBox[{"demandcountries", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}],
+                    "]"}], "]"}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], 
+            "]"}], "]"}], ",", "3"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "b"}], "}"}], ",", 
+        RowBox[{"NominalVariables", "\[Rule]", "a"}]}], "]"}], "[", 
+      "\"\<ParameterTableEntries\>\"", "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{"-", "1"}], "]"}], "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.9123312045517216`*^9, 3.9123312053175774`*^9}, {
+   3.9123313080491*^9, 3.9123313248550043`*^9}, 3.9123314935159025`*^9, {
+   3.9123315390694466`*^9, 3.9123315451404457`*^9}, {3.9123317238140373`*^9, 
+   3.9123317284424896`*^9}, {3.912593226203518*^9, 3.9125932537034054`*^9}, {
+   3.9125957270026436`*^9, 3.9125957531171775`*^9}},
+ CellLabel->"In[70]:=",ExpressionUUID->"0a9d3200-6183-4002-9abe-8d734b00c423"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "List", " ", "of", " ", "elasticity", " ", "estimates", " ", "for", " ", 
+    "direct", " ", "effect", " ", "and", " ", "labels"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"logestimatelistdirect", "=", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"Quiet", "[", 
+        RowBox[{"Cases", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"estimateslogdirect", "[", 
+                RowBox[{"sectors", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"1.96", "*", 
+               RowBox[{
+                RowBox[{"estimateslogdirect", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", 
+              RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"_", "?", "NumericQ"}], ",", 
+            RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+       "First"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"logestimatelistlabelsdirect", "=", 
+     RowBox[{
+      RowBox[{"SortBy", "[", 
+       RowBox[{
+        RowBox[{"Quiet", "[", 
+         RowBox[{"Cases", "[", 
+          RowBox[{
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"sectors", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], ",", 
+               RowBox[{"1.96", "*", 
+                RowBox[{
+                 RowBox[{"estimateslogdirect", "[", 
+                  RowBox[{"sectors", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"estimateslogdirect", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"_", ",", 
+             RowBox[{"_", "?", "NumericQ"}], ",", 
+             RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+        "Last"}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "1"}], "]"}], "]"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.9123315993836927`*^9, 3.912331629278468*^9}, {
+  3.9125932563283625`*^9, 3.912593272230054*^9}},
+ CellLabel->"In[72]:=",ExpressionUUID->"a69f2ab4-83eb-44d8-9db1-7cc109efc979"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Plot", " ", "of", " ", "elasticities", " ", "of", " ", "direct", " ", 
+    "effect"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"ListPlot", "[", 
+   RowBox[{
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"Around", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"logestimatelistdirect", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "1"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"logestimatelistdirect", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "2"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "logestimatelistdirect", "]"}]}], "}"}]}], 
+     "]"}], ",", 
+    RowBox[{"Frame", "->", "True"}], ",", 
+    RowBox[{"FrameTicks", "->", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"tick", "@", 
+              RowBox[{"logestimatelistlabelsdirect", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", 
+             RowBox[{"Length", "[", "logestimatelistlabelsdirect", "]"}]}], 
+            "}"}]}], "]"}], ",", "None"}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"ImageSize", "->", "500"}], ",", 
+    RowBox[{"PlotStyle", "->", "Black"}], ",", " ", 
+    RowBox[{
+    "PlotLabel", "->", "\"\<Coefficients for the Direct Effect\>\""}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.9123316487813673`*^9, 3.9123316715910463`*^9}, {
+   3.912331757953779*^9, 3.9123317689374037`*^9}, {3.9123326779302516`*^9, 
+   3.912332693670639*^9}, {3.912593274679884*^9, 3.9125932860279813`*^9}, 
+   3.9296359433725834`*^9},
+ CellLabel->"In[74]:=",ExpressionUUID->"ea4d67a0-0f62-4d6f-b4a4-a4915995aaa2"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9296362333713837`*^9, 3.929636233387001*^9}},
+ CellLabel->"In[75]:=",ExpressionUUID->"50941ed3-de01-438a-b736-aea3c860d484"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "List", " ", "of", " ", "elasticity", " ", "estimates", " ", "for", " ", 
+    "indirect", " ", "effect"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"logestimatelistindirect", "=", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"Quiet", "[", 
+        RowBox[{"Cases", "[", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"estimateslogindirect", "[", 
+                RowBox[{"sectors", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{"1.96", "*", 
+               RowBox[{
+                RowBox[{"estimateslogindirect", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", 
+              RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"_", "?", "NumericQ"}], ",", 
+            RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+       "First"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Labels", " ", "for", " ", "elasticity", " ", "estimates", " ", "for", 
+     " ", "indirect", " ", "effect"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"logestimatelistlabelsindirect", "=", 
+     RowBox[{
+      RowBox[{"SortBy", "[", 
+       RowBox[{
+        RowBox[{"Quiet", "[", 
+         RowBox[{"Cases", "[", 
+          RowBox[{
+           RowBox[{"Table", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"sectors", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], ",", 
+               RowBox[{"1.96", "*", 
+                RowBox[{
+                 RowBox[{"estimateslogindirect", "[", 
+                  RowBox[{"sectors", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                 RowBox[{"[", "2", "]"}], "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"estimateslogindirect", "[", 
+                 RowBox[{"sectors", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", "1", ",", 
+               RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"_", ",", 
+             RowBox[{"_", "?", "NumericQ"}], ",", 
+             RowBox[{"_", "?", "NumericQ"}]}], "}"}]}], "]"}], "]"}], ",", 
+        "Last"}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "1"}], "]"}], "]"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.912331775564165*^9, 3.9123317881887646`*^9}, {
+  3.9125932899390783`*^9, 3.9125932906101136`*^9}, {3.9125933440327616`*^9, 
+  3.9125933647468987`*^9}},
+ CellLabel->"In[76]:=",ExpressionUUID->"e7cd6acd-bc7b-47d1-a986-7f34f6429fea"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Plot", " ", "of", " ", "elasticity", " ", "estimates", " ", "for", " ", 
+    "the", " ", "indirect", " ", "effect"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"ListPlot", "[", 
+   RowBox[{
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"Around", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"logestimatelistindirect", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "1"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"logestimatelistindirect", "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "2"}], "]"}], "]"}], "[", 
+         RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"Length", "[", "logestimatelistindirect", "]"}]}], "}"}]}], 
+     "]"}], ",", 
+    RowBox[{"Frame", "->", "True"}], ",", 
+    RowBox[{"FrameTicks", "->", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Automatic", ",", "None"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"i", ",", 
+             RowBox[{"tick", "@", 
+              RowBox[{"logestimatelistlabelsindirect", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", 
+             RowBox[{"Length", "[", "logestimatelistlabelsindirect", "]"}]}], 
+            "}"}]}], "]"}], ",", "None"}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"ImageSize", "->", "500"}], ",", 
+    RowBox[{"PlotStyle", "->", "Black"}], ",", 
+    RowBox[{
+    "PlotLabel", "->", "\"\<Coefficients for the Indirect Effect\>\""}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.912331802079559*^9, 3.912331816467986*^9}, {
+   3.9123327154763*^9, 3.9123327232375684`*^9}, {3.912593375606493*^9, 
+   3.912593387100706*^9}, 3.929635948297304*^9},
+ CellLabel->"In[78]:=",ExpressionUUID->"4a116e53-7a45-4dee-8b0b-ca82770ef451"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9296362349022927`*^9, 3.929636234917924*^9}},
+ CellLabel->"In[79]:=",ExpressionUUID->"ba7ef837-75f7-492c-8ead-ff5afd75e40b"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9125942198392153`*^9, 3.9125942198392153`*^9}, {
+   3.912612403789406*^9, 3.912612406961155*^9}, 3.9296359628166094`*^9},
+ CellLabel->"In[80]:=",ExpressionUUID->"824a79a2-d778-4324-bf8a-5ce7cc3d089e"],
+
+Cell[BoxData[
+ RowBox[{"(*", 
+  RowBox[{"Export", " ", "elasticity", " ", "tables"}], "*)"}]], "Input",
+ CellChangeTimes->{{3.9296359640663176`*^9, 3.9296359640819387`*^9}, {
+  3.9296360474680223`*^9, 3.9296360569333935`*^9}},
+ CellLabel->"In[81]:=",ExpressionUUID->"70715092-5d7a-479d-9ba4-a399feb6a2b0"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<logestimatelisttotal.xlsx\>\"", ",", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Transpose", "[", 
+       RowBox[{"{", 
+        RowBox[{"logestimatelistlabels", ",", "logestimatelist"}], "}"}], 
+       "]"}], "]"}], ",", "3"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.9158017396902494`*^9, 3.915801771441869*^9}, {
+  3.9158835727597103`*^9, 3.9158835821569977`*^9}, {3.916316105814262*^9, 
+  3.916316106092713*^9}},
+ CellLabel->"In[82]:=",ExpressionUUID->"65c97d83-4635-41ba-80d9-63ad7cd08365"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<logestimatelistdirect.xlsx\>\"", ",", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Transpose", "[", 
+       RowBox[{"{", 
+        RowBox[{"logestimatelistlabelsdirect", ",", "logestimatelistdirect"}],
+         "}"}], "]"}], "]"}], ",", "3"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.915801809236451*^9, 3.9158018161170926`*^9}, {
+  3.9158835762439747`*^9, 3.915883583859398*^9}, {3.916316109719646*^9, 
+  3.9163161113053613`*^9}},
+ CellLabel->"In[83]:=",ExpressionUUID->"c5db0693-023a-46b7-857f-6fd0aafd9fe0"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<logestimatelistindirect.xlsx\>\"", ",", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Transpose", "[", 
+       RowBox[{"{", 
+        RowBox[{
+        "logestimatelistlabelsindirect", ",", "logestimatelistindirect"}], 
+        "}"}], "]"}], "]"}], ",", "3"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.915801856393279*^9, 3.915801856393279*^9}, {
+  3.915883585712757*^9, 3.915883585913172*^9}, {3.9163161136522927`*^9, 
+  3.9163161153264675`*^9}},
+ CellLabel->"In[84]:=",ExpressionUUID->"f5fc1fe7-aa34-40d5-b485-d82814bc7425"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Export", " ", "tables", " ", "for", " ", "average", " ", "mean", " ", 
+    "effect", " ", "of", " ", "sector", " ", "classes"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"meansectortotal", "[", "sector_", "]"}], ":=", 
+    RowBox[{"Mean", "[", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"totalallcountries", "[", 
+           RowBox[{
+            RowBox[{"demandcountries", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}], "]"}],
+           ",", 
+          RowBox[{"{", 
+           RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], "]"}], 
+      "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"meansectordirect", "[", "sector_", "]"}], ":=", 
+    RowBox[{"Mean", "[", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"totaldirectallcountries", "[", 
+           RowBox[{
+            RowBox[{"demandcountries", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}], "]"}],
+           ",", 
+          RowBox[{"{", 
+           RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], "]"}], 
+      "]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"meansectorindirect", "[", "sector_", "]"}], ":=", 
+    RowBox[{"Mean", "[", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"totalindirectallcountries", "[", 
+           RowBox[{
+            RowBox[{"demandcountries", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", "sector", ",", "q"}], "]"}],
+           ",", 
+          RowBox[{"{", 
+           RowBox[{"q", ",", "1", ",", "5"}], "}"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "demandcountries", "]"}]}], "}"}]}], "]"}], 
+      "]"}], "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.9181164796171293`*^9, 3.9181165032184105`*^9}, {
+  3.918116544536641*^9, 3.918116553030974*^9}, {3.929636061291748*^9, 
+  3.929636067743365*^9}, {3.9299656883273983`*^9, 
+  3.9299656967813053`*^9}},ExpressionUUID->"69dd36b9-d632-44ce-a68c-\
+5b42c796672f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"meantable", "=", 
+   RowBox[{"Reverse", "[", 
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"sectors", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", 
+          RowBox[{"meansectordirect", "[", 
+           RowBox[{"sectors", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}], ",", 
+          RowBox[{"meansectorindirect", "[", 
+           RowBox[{"sectors", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}], ",", 
+          RowBox[{"meansectortotal", "[", 
+           RowBox[{"sectors", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "sectors", "]"}]}], "}"}]}], "]"}], ",", 
+      "Last"}], "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.918116466126808*^9, 3.9181164761962805`*^9}, {
+  3.9181165569891844`*^9, 3.9181166442865105`*^9}, {3.9181166999935956`*^9, 
+  3.918116702811755*^9}, {3.9299657120798025`*^9, 
+  3.9299657125955734`*^9}},ExpressionUUID->"ee208418-7857-4cd1-a050-\
+89f6df4458e8"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<meantable.csv\>\"", ",", "meantable"}], "]"}]], "Input",
+ CellChangeTimes->{{3.918116670479139*^9, 3.9181166853168144`*^9}, {
+  3.9299657207213287`*^9, 
+  3.9299657241748147`*^9}},ExpressionUUID->"9d6b0140-38c2-42de-bcb7-\
+ee64f31a8f0f"]
+},
+WindowSize->{958, 988},
+WindowMargins->{{Automatic, -7}, {Automatic, 0}},
+Magnification:>1. Inherited,
+FrontEndVersion->"11.3 for Microsoft Windows (64-bit) (March 6, 2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 9305, 233, 926, "Input",ExpressionUUID->"63171fc0-b810-44ee-8b1e-ff8cc91794ac"],
+Cell[9866, 255, 8650, 214, 908, "Input",ExpressionUUID->"c5d2d9cf-2e64-4c33-bd5c-2a26cc12b125"],
+Cell[18519, 471, 3460, 92, 383, "Input",ExpressionUUID->"5c812635-3dd3-48bf-8b88-f744011f8f53"],
+Cell[21982, 565, 156, 3, 28, "Input",ExpressionUUID->"afefd359-ce36-4ebc-b48f-d64c41bb71fb"],
+Cell[22141, 570, 1944, 52, 175, "Input",ExpressionUUID->"13d0233e-75fd-41ad-9100-748bddb19ebf"],
+Cell[24088, 624, 171, 2, 28, "Input",ExpressionUUID->"cca155ae-db00-409f-a3fd-4118a324235b"],
+Cell[24262, 628, 440, 8, 28, "Input",ExpressionUUID->"c614857f-a36f-4750-ac3d-0f5a9aabd0ef"],
+Cell[24705, 638, 1564, 42, 139, "Input",ExpressionUUID->"edfeb51c-a625-4b1e-b6cf-d3795da282cd"],
+Cell[26272, 682, 4664, 112, 454, "Input",ExpressionUUID->"0a9d3200-6183-4002-9abe-8d734b00c423"],
+Cell[30939, 796, 2976, 75, 324, "Input",ExpressionUUID->"a69f2ab4-83eb-44d8-9db1-7cc109efc979"],
+Cell[33918, 873, 2086, 54, 212, "Input",ExpressionUUID->"ea4d67a0-0f62-4d6f-b4a4-a4915995aaa2"],
+Cell[36007, 929, 173, 2, 28, "Input",ExpressionUUID->"50941ed3-de01-438a-b736-aea3c860d484"],
+Cell[36183, 933, 3193, 79, 343, "Input",ExpressionUUID->"e7cd6acd-bc7b-47d1-a986-7f34f6429fea"],
+Cell[39379, 1014, 2062, 53, 249, "Input",ExpressionUUID->"4a116e53-7a45-4dee-8b0b-ca82770ef451"],
+Cell[41444, 1069, 173, 2, 28, "Input",ExpressionUUID->"ba7ef837-75f7-492c-8ead-ff5afd75e40b"],
+Cell[41620, 1073, 249, 3, 28, "Input",ExpressionUUID->"824a79a2-d778-4324-bf8a-5ce7cc3d089e"],
+Cell[41872, 1078, 305, 5, 28, "Input",ExpressionUUID->"70715092-5d7a-479d-9ba4-a399feb6a2b0"],
+Cell[42180, 1085, 601, 13, 45, "Input",ExpressionUUID->"65c97d83-4635-41ba-80d9-63ad7cd08365"],
+Cell[42784, 1100, 615, 13, 82, "Input",ExpressionUUID->"c5db0693-023a-46b7-857f-6fd0aafd9fe0"],
+Cell[43402, 1115, 628, 14, 82, "Input",ExpressionUUID->"f5fc1fe7-aa34-40d5-b485-d82814bc7425"],
+Cell[44033, 1131, 2632, 69, 306, "Input",ExpressionUUID->"69dd36b9-d632-44ce-a68c-5b42c796672f"],
+Cell[46668, 1202, 1178, 29, 138, "Input",ExpressionUUID->"ee208418-7857-4cd1-a050-89f6df4458e8"],
+Cell[47849, 1233, 291, 6, 45, "Input",ExpressionUUID->"9d6b0140-38c2-42de-bcb7-ee64f31a8f0f"]
+}
+]
+*)
+
