@@ -10,4 +10,5 @@ Please reference this work or the use of the merged consumption tables as:
 Ipsen, L., & Schulz, J. (2024). The (Dis-)equalizing Effects of Production Networks (Berg Working Paper No. 195)
 
 - Link to Eurostat Data on Consumption by Purpose: https://ec.europa.eu/eurostat/databrowser/view/hbs_str_t223/default/table?lang=en&category=livcon.hbs.hbs_struc
-- Link to Input Output Data: https://www.rug.nl/ggdc/valuechain/wiod/?lang=en
+- Link to Eurostat Data on Distribution of Income by Quantiles: https://ec.europa.eu/eurostat/databrowser/view/ilc_di01/default/table?lang=en&category=livcon.ilc.ilc_ip.ilc_di.
+- Link to Input Output Data (including prices): https://www.rug.nl/ggdc/valuechain/wiod/?lang=en
